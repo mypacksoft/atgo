@@ -37,7 +37,7 @@ jobs:
           --health-retries 10
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: actions/setup-python@v5
         with:
@@ -95,7 +95,7 @@ jobs:
     name: Portal · Next.js
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -118,7 +118,7 @@ jobs:
     name: Odoo · manifest validation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -186,7 +186,7 @@ jobs:
           --health-cmd "pg_isready -U atgo"
           --health-interval 5s
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Apply schema (fail on warnings)
         env:
           PGPASSWORD: atgo_test

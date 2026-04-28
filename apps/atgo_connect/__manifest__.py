@@ -30,7 +30,9 @@ Setup
     "maintainer": "ATGO",
     "website": "https://atgo.io",
     "support": "support@atgo.io",
-    "license": "LGPL-3",
+    "license": "OPL-1",
+    "price": 19.00,
+    "currency": "USD",
     "category": "Human Resources/Attendances",
     "depends": ["base", "hr", "hr_attendance"],
     "external_dependencies": {

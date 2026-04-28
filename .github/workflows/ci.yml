@@ -1,0 +1,206 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    name: API · Python
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: atgo
+          POSTGRES_PASSWORD: atgo_test
+          POSTGRES_DB: atgo
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U atgo"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: apps/api/pyproject.toml
+
+      - name: Install API dependencies
+        working-directory: apps/api
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Apply Postgres schema
+        env:
+          PGPASSWORD: atgo_test
+        run: |
+          psql -h localhost -U atgo -d atgo -f infra/postgres/init.sql
+          psql -h localhost -U atgo -d atgo -f infra/postgres/init_002_features.sql
+
+      - name: Lint (ruff)
+        working-directory: apps/api
+        run: ruff check atgo_api/
+
+      - name: Import smoke test (boots app, validates RLS bind)
+        working-directory: apps/api
+        env:
+          DATABASE_URL: postgresql+asyncpg://atgo:atgo_test@localhost:5432/atgo
+          REDIS_URL: redis://localhost:6379/0
+          JWT_SECRET: ci-test-secret-thirty-two-chars-minimum-required
+          ENVIRONMENT: development
+          BASE_DOMAIN: atgo.local
+        run: |
+          python -c "
+          from atgo_api.main import app
+          assert len(app.routes) > 50, f'too few routes: {len(app.routes)}'
+          print(f'OK · {len(app.routes)} routes')
+          "
+
+      - name: pytest (if any)
+        working-directory: apps/api
+        env:
+          DATABASE_URL: postgresql+asyncpg://atgo:atgo_test@localhost:5432/atgo
+          REDIS_URL: redis://localhost:6379/0
+          JWT_SECRET: ci-test-secret-thirty-two-chars-minimum-required
+          ENVIRONMENT: development
+        run: |
+          if find . -name "test_*.py" -o -name "*_test.py" | grep -q .; then
+            pytest -q
+          else
+            echo "No tests yet — skipping."
+          fi
+
+  portal:
+    name: Portal · Next.js
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: apps/portal/package-lock.json
+      - name: Install
+        working-directory: apps/portal
+        run: npm ci --no-audit --no-fund
+      - name: Type-check
+        working-directory: apps/portal
+        run: npx tsc --noEmit
+      - name: Build
+        working-directory: apps/portal
+        env:
+          NEXT_PUBLIC_API_BASE: http://localhost:8000
+          NEXT_PUBLIC_BASE_DOMAIN: atgo.local
+        run: npm run build
+
+  odoo-manifest:
+    name: Odoo · manifest validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate manifest is valid Python literal
+        run: |
+          python <<'PY'
+          import ast, pathlib, sys
+          path = pathlib.Path("apps/atgo_connect/__manifest__.py")
+          data = ast.literal_eval(path.read_text(encoding="utf-8"))
+          required = {"name", "version", "author", "license", "depends", "category"}
+          missing = required - data.keys()
+          if missing:
+              print(f"Manifest missing keys: {missing}", file=sys.stderr)
+              sys.exit(1)
+          if data.get("license") not in {"OPL-1", "LGPL-3", "AGPL-3", "GPL-3"}:
+              print(f"License {data.get('license')} not accepted on Odoo Apps", file=sys.stderr)
+              sys.exit(1)
+          if data.get("license") == "OPL-1":
+              if "price" not in data or "currency" not in data:
+                  print("OPL-1 modules must declare price + currency", file=sys.stderr)
+                  sys.exit(1)
+          print(f"OK · {data['name']} v{data['version']} ({data['license']})")
+          PY
+
+      - name: All XML view files parse
+        run: |
+          python -c "
+          import xml.etree.ElementTree as ET, glob, sys
+          bad = []
+          for f in glob.glob('apps/atgo_connect/**/*.xml', recursive=True):
+              try: ET.parse(f)
+              except ET.ParseError as e: bad.append((f, e))
+          if bad:
+              for f, e in bad: print(f'{f}: {e}', file=sys.stderr)
+              sys.exit(1)
+          print('OK · all XML view files parse')
+          "
+
+      - name: ir.model.access.csv has correct shape
+        run: |
+          python -c "
+          import csv
+          with open('apps/atgo_connect/security/ir.model.access.csv') as f:
+              rows = list(csv.DictReader(f))
+          required_cols = {'id', 'name', 'model_id:id', 'group_id:id',
+                           'perm_read', 'perm_write', 'perm_create', 'perm_unlink'}
+          missing = required_cols - rows[0].keys()
+          assert not missing, f'missing CSV columns: {missing}'
+          assert len(rows) >= 1, 'no access rules defined'
+          print(f'OK · {len(rows)} access rules')
+          "
+
+  schema-check:
+    name: Postgres · schema applies cleanly
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: atgo
+          POSTGRES_PASSWORD: atgo_test
+          POSTGRES_DB: atgo_check
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U atgo"
+          --health-interval 5s
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply schema (fail on warnings)
+        env:
+          PGPASSWORD: atgo_test
+        run: |
+          set -e
+          psql -h localhost -U atgo -d atgo_check -v ON_ERROR_STOP=1 \
+            -f infra/postgres/init.sql
+          psql -h localhost -U atgo -d atgo_check -v ON_ERROR_STOP=1 \
+            -f infra/postgres/init_002_features.sql
+          # Verify RLS is forced on key tables
+          psql -h localhost -U atgo -d atgo_check -tAc "
+            SELECT tablename FROM pg_tables WHERE schemaname='public'
+            AND tablename IN ('tenants','devices','employees','attendance_records')
+            AND NOT (
+              SELECT relrowsecurity AND relforcerowsecurity
+              FROM pg_class WHERE relname = tablename
+            );" | grep -q . && { echo 'RLS not forced on some tables'; exit 1; } || echo "OK · RLS forced everywhere"

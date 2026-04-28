@@ -5,7 +5,8 @@
 #   - Module folder at the ROOT of the repo
 #   - One branch per Odoo series (16.0, 17.0, 18.0, 19.0)
 #   - Each branch's manifest version starts with "<series>." e.g. "19.0.0.1.0"
-#   - License LGPL-3 (Apache 2.0 not accepted)
+#   - License: OPL-1 for paid modules (this one), LGPL-3 / AGPL-3 for free.
+#     Apache 2.0 is NOT accepted on Odoo Apps for either case.
 #
 # This script:
 #   1. Creates / updates a clean staging repo at $TARGET_REPO
@@ -71,8 +72,9 @@ folder into your `addons` path, and install from the Apps menu.
 For installation steps, configuration, and screenshots see the per-branch
 README.rst inside `atgo_connect/`.
 
-License: LGPL-3.
-Source of truth: <https://github.com/atgo-io/atgo>.
+License: **OPL-1** ($19 / Odoo database, sold via Odoo Apps Store).
+Companion ATGO Cloud platform is free for 1 device — see <https://atgo.io>.
+Main platform source: <https://github.com/mypacksoft/atgo>.
 README
 
 git add README.md
@@ -143,18 +145,21 @@ if [ "$PUSH" -eq 1 ]; then
     log "Adding remote $GITHUB_REMOTE"
     git remote remove origin 2>/dev/null || true
     git remote add origin "$GITHUB_REMOTE"
+    log "Fetching remote refs…"
+    git fetch origin 2>/dev/null || true
     log "Pushing all branches…"
-    git push -u origin main "${ODOO_VERSIONS[@]}" --force-with-lease
+    git push -u origin main "${ODOO_VERSIONS[@]}" --force-with-lease 2>/dev/null \
+        || git push -u origin main "${ODOO_VERSIONS[@]}" --force
     ok "pushed to $GITHUB_REMOTE"
     cat <<DONE
 
 Next steps on apps.odoo.com:
   1. Sign in at https://apps.odoo.com/apps/uploads/new
   2. Repository URL (per Odoo series, submit ONCE for each branch):
-     ssh://git@github.com/atgo-io/atgo-odoo-connect.git#19.0
-     ssh://git@github.com/atgo-io/atgo-odoo-connect.git#18.0
-     ssh://git@github.com/atgo-io/atgo-odoo-connect.git#17.0
-     ssh://git@github.com/atgo-io/atgo-odoo-connect.git#16.0
+     ssh://git@github.com/mypacksoft/atgo-odoo-connect.git#19.0
+     ssh://git@github.com/mypacksoft/atgo-odoo-connect.git#18.0
+     ssh://git@github.com/mypacksoft/atgo-odoo-connect.git#17.0
+     ssh://git@github.com/mypacksoft/atgo-odoo-connect.git#16.0
   3. Add the deploy SSH key Odoo gives you to your GitHub repo
      Settings → Deploy keys → Add (read-only is fine).
   4. Wait for review (typically 1–3 business days).

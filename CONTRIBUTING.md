@@ -22,7 +22,7 @@ Docker.
 apps/
   api/              FastAPI + SQLAlchemy + asyncpg
   portal/           Next.js 15 (App Router) — landing, dashboard, admin
-  atgo_connect/     Odoo 16/17/18/19 module (LGPL-3, separate Apps Store repo)
+  atgo_connect/     Odoo 16/17/18/19 module (OPL-1 paid app, separate Apps Store repo)
 infra/
   postgres/         init.sql + feature migrations (RLS, partitions)
   caddy/            Caddyfile — dev + production

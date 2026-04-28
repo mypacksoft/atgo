@@ -1,0 +1,37 @@
+name: ✨ Feature request
+description: Suggest a new feature or improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Describe the user / business scenario. Don't jump to solutions yet.
+    validations: { required: true }
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+    validations: { required: true }
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      placeholder: What else could solve this? Why is the proposal better?
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - API
+        - Portal UI
+        - Admin / super-admin
+        - ADMS / device side
+        - Odoo connector
+        - Billing / pricing
+        - Deployment / DevOps
+        - Documentation
+    validations: { required: true }

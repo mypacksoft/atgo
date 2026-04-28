@@ -1,0 +1,74 @@
+name: 🐞 Bug report
+description: Something is broken or behaving unexpectedly
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug. Security issues should go to **security@atgo.io**, not here.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Clear, factual description.
+    validations: { required: true }
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations: { required: true }
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations: { required: true }
+
+  - type: input
+    id: version
+    attributes:
+      label: ATGO version / commit hash
+      placeholder: "e.g. v0.1.0 or abc1234"
+    validations: { required: true }
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - API (FastAPI)
+        - Portal (Next.js)
+        - ADMS / ZKTeco protocol
+        - Odoo connector
+        - Postgres / RLS / migrations
+        - Billing / payments
+        - Deployment / infra
+        - Other
+    validations: { required: true }
+
+  - type: input
+    id: device
+    attributes:
+      label: ZKTeco device model + firmware (if relevant)
+      placeholder: "e.g. K40 firmware 6.60"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Backend log excerpt, browser console, or the API response. Redact secrets.
+      render: text
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Terms
+      options:
+        - label: I confirm this report contains no secrets / customer data
+          required: true

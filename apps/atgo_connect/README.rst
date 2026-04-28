@@ -2,11 +2,12 @@
 ATGO Connect — ZKTeco Cloud Attendance
 ============================================
 
-.. |badge1| image:: https://img.shields.io/badge/licence-LGPL--3-blue.png
-    :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
+.. |badge1| image:: https://img.shields.io/badge/licence-OPL--1-blueviolet.png
+    :target: https://www.odoo.com/documentation/19.0/legal/licenses.html#odoo-apps
 .. |badge2| image:: https://img.shields.io/badge/odoo-16%20|%2017%20|%2018%20|%2019-714B67.svg
+.. |badge3| image:: https://img.shields.io/badge/price-%2419-success.svg
 
-|badge1| |badge2|
+|badge1| |badge2| |badge3|
 
 Free online attendance system for ZKTeco devices, integrated into Odoo HR.
 
@@ -89,4 +90,10 @@ This module is maintained by ATGO.
 License
 ~~~~~~~
 
-This module is licensed under LGPL-3.0.
+This module is licensed under the **Odoo Proprietary License v1.0 (OPL-1)**.
+
+Buy a license from the Odoo Apps Store ($19): https://apps.odoo.com/apps/modules/19.0/atgo_connect/
+
+The fee is per Odoo database. The accompanying ATGO Cloud platform itself is
+free for 1 ZKTeco device — pricing for additional devices and HR features is
+on https://atgo.io/pricing.

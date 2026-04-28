@@ -1,0 +1,14 @@
+{
+  "name": "ATGO — My attendance",
+  "short_name": "ATGO",
+  "description": "Employee self-service for ZKTeco cloud attendance",
+  "start_url": "/me",
+  "scope": "/me",
+  "display": "standalone",
+  "background_color": "#0e1117",
+  "theme_color": "#2f81f7",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -1,0 +1,68 @@
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+    <h2 class="oe_slogan">ATGO Connect</h2>
+    <h3 class="oe_slogan" style="font-weight:300">Cloud attendance for ZKTeco devices, in your Odoo</h3>
+    <p class="oe_mt32" style="text-align:center;max-width:780px;margin:0 auto;">
+      Stop fighting with static IPs and port forwarding. Point your ZKTeco
+      device at ATGO Cloud, then let Odoo pull punches every 5 minutes.
+      No inbound network access required.
+    </p>
+  </div>
+</section>
+
+<section class="oe_container oe_dark">
+  <div class="oe_row oe_spaced">
+    <h2 class="oe_slogan">How it works</h2>
+    <div class="oe_span6">
+      <h3>1. Device → ATGO Cloud</h3>
+      <p>ZKTeco devices push punches to <code>adms.atgo.io</code>
+      (or the short URL you copy from the ATGO portal during device setup).
+      Works with any ZK device that supports ADMS / Cloud Server config.</p>
+    </div>
+    <div class="oe_span6">
+      <h3>2. Odoo → ATGO Cloud</h3>
+      <p>This module polls ATGO every 5 minutes via API key, creates
+      <code>hr.attendance</code>, and acks logs so they aren't fetched twice.
+      Pure outbound — no port forwarding on the Odoo host.</p>
+    </div>
+  </div>
+</section>
+
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+    <h2 class="oe_slogan">Features</h2>
+    <ul style="max-width:780px;margin:0 auto;line-height:1.8">
+      <li>Pull attendance from ATGO Cloud → Odoo <code>hr.attendance</code></li>
+      <li>Map ZKTeco device PIN to <code>hr.employee.barcode</code></li>
+      <li>Optional one-way employee push (Odoo → ATGO)</li>
+      <li>Per-device sync status, error visibility, manual re-sync</li>
+      <li>Compatible with Odoo 16.0, 17.0, 18.0, 19.0</li>
+      <li>Biometric data is dropped at the ATGO edge — never reaches Odoo</li>
+    </ul>
+  </div>
+</section>
+
+<section class="oe_container oe_dark">
+  <div class="oe_row oe_spaced">
+    <h2 class="oe_slogan">Setup in 60 seconds</h2>
+    <ol style="max-width:780px;margin:0 auto;line-height:1.8">
+      <li>Install this module from the Odoo Apps store.</li>
+      <li>Sign up at <a href="https://atgo.io">atgo.io</a> (free for 1 device, unlimited employees).</li>
+      <li>In ATGO portal: Settings → API keys → Generate. Copy the key.</li>
+      <li>In Odoo: <strong>ATGO → Settings</strong>. Paste workspace slug + API key.</li>
+      <li>Click <strong>Test connection</strong>. Cron picks up new punches every 5 minutes.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+    <h2 class="oe_slogan">License & support</h2>
+    <p style="text-align:center;max-width:780px;margin:0 auto;">
+      LGPL-3. Source code on
+      <a href="https://github.com/atgo-io/atgo-odoo-connect">GitHub</a>.
+      Issues: <a href="https://github.com/atgo-io/atgo-odoo-connect/issues">tracker</a>.
+      Security: <a href="mailto:security@atgo.io">security@atgo.io</a>.
+    </p>
+  </div>
+</section>

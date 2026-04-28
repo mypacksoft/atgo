@@ -1,0 +1,112 @@
+# ATGO production Caddyfile
+#
+# Architecture: single domain `atgo.io`. Path-based tenant workspaces.
+# Custom domains via On-Demand TLS gated by /api/internal/tls-check.
+#
+# Endpoints served by this Caddy:
+#
+#   atgo.io                  → Next.js portal       (landing + login + signup)
+#   atgo.io/{slug}/*         → Next.js portal       (tenant workspace)
+#   atgo.io/api/*            → FastAPI              (REST API)
+#   atgo.io/iclock/*         → FastAPI              (ZKTeco ADMS — direct path)
+#   atgo.io/_admin/*         → Next.js portal       (super-admin UI, IP-restricted)
+#   atgo.io/_internal/*      → FastAPI              (rejected from public)
+#   <custom>.example.com     → same as atgo.io       (Caddy issues per-domain LE cert)
+
+{
+    email atgo-ops@atgo.io   # for Let's Encrypt account
+
+    on_demand_tls {
+        ask         http://localhost:8000/api/internal/tls-check
+        rate_limit  10/1m   # max 10 cert issuances per minute, prevents abuse
+        burst       3
+    }
+
+    log {
+        output file /var/log/caddy/access.log {
+            roll_size  100mb
+            roll_keep  10
+        }
+    }
+}
+
+# ============================================================
+# Primary host — atgo.io
+# ============================================================
+
+atgo.io, www.atgo.io {
+    encode gzip zstd
+
+    # Reject /_internal/* from the public — only Caddy itself talks to it.
+    @internal path /_internal/* /api/internal/*
+    handle @internal {
+        respond "Not found" 404
+    }
+
+    # Lock /_admin/* to your office IPs. Replace below.
+    @admin path /_admin /_admin/*
+    handle @admin {
+        @allowedAdminIp remote_ip 203.0.113.0/24 198.51.100.42 127.0.0.1
+        handle @allowedAdminIp {
+            reverse_proxy localhost:3000
+        }
+        respond "admin restricted" 403
+    }
+
+    # FastAPI surface
+    @api path /api/* /iclock/* /heartbeat
+    handle @api {
+        reverse_proxy localhost:8000
+    }
+
+    # Static assets and Next.js internals
+    @next path /_next/* /favicon.ico /robots.txt /sitemap.xml /manifest.webmanifest
+    handle @next {
+        reverse_proxy localhost:3000
+    }
+
+    # Everything else → portal (handles /, /login, /signup, /pricing, /{slug}/...)
+    reverse_proxy localhost:3000
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options    "nosniff"
+        Referrer-Policy           "strict-origin-when-cross-origin"
+    }
+}
+
+# ============================================================
+# Custom domains — On-Demand TLS gated by tls-check endpoint
+# ============================================================
+# Anything else that resolves to this server (i.e. customers' CNAME
+# records pointing to this IP) gets the same routing AS LONG AS the
+# domain is verified+active in our `tenant_domains` table — the
+# on_demand_tls 'ask' callback enforces that.
+
+https:// {
+    tls {
+        on_demand
+    }
+
+    @api path /api/* /iclock/* /heartbeat
+    handle @api {
+        reverse_proxy localhost:8000
+    }
+
+    # Forward the original Host so the API resolves the right tenant via
+    # tenant_domains lookup.
+    reverse_proxy localhost:3000
+
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options    "nosniff"
+    }
+}
+
+# ============================================================
+# Plain HTTP → HTTPS upgrade for everything
+# ============================================================
+
+http:// {
+    redir https://{host}{uri} permanent
+}

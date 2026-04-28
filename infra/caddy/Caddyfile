@@ -1,0 +1,135 @@
+# ATGO Caddy config
+#
+# Two flavors live here. Local dev (atgo.local) uses HTTP; production
+# uses HTTPS with on-demand TLS for custom domains. Pick which block to
+# uncomment by changing $ATGO_ENV (compose env). For simplicity we keep
+# both blocks — Caddy's auto_https off in dev makes the prod block inert
+# when running on .local.
+#
+# Wildcard cert for *.atgo.io is provisioned via DNS-01 in prod (you'll
+# need to pass a Cloudflare/Route53 token to Caddy via env). Custom
+# domains use HTTP-01 / TLS-ALPN-01 with on-demand TLS, gated by an
+# /api/internal/tls-check call.
+
+{
+	# In dev keep auto_https off for .local; comment in prod.
+	auto_https off
+	admin off
+
+	on_demand_tls {
+		# Caddy hits this URL for every cert request — only domains we
+		# explicitly verified are allowed.
+		ask http://api:8000/api/internal/tls-check
+		interval 1m
+		burst    5
+	}
+}
+
+# ============================================================
+# DEV (HTTP) BLOCKS — atgo.local
+# ============================================================
+
+http://atgo.local:80, http://www.atgo.local:80 {
+	encode gzip
+	# Marketing / portal entrypoint — Next.js portal in prod, stub here.
+	reverse_proxy portal:3000
+}
+
+http://api.atgo.local:80 {
+	encode gzip
+	reverse_proxy api:8000
+}
+
+http://adms.atgo.local:80 {
+	encode gzip
+	@allowed path /iclock/* /heartbeat /health
+	handle @allowed {
+		reverse_proxy api:8000 {
+			header_up X-Forwarded-Proto http
+		}
+	}
+	respond "Not found" 404
+}
+
+http://admin.atgo.local:80 {
+	encode gzip
+	reverse_proxy api:8000
+}
+
+http://cname.atgo.local:80 {
+	respond "ATGO custom-domain endpoint OK" 200
+}
+
+# Short URL for ZK devices: atgo.local/{device_code}/iclock/...
+# Caddy rewrites to /iclock/... and forwards to API.
+http://atgo.local:80 {
+	@short path_regexp short ^/(?P<dc>[A-Z0-9]{4})/iclock/(?P<rest>.*)$
+	handle @short {
+		rewrite * /iclock/{re.short.rest}?{query}&device_code={re.short.dc}
+		reverse_proxy api:8000
+	}
+}
+
+# Tenant workspaces — wildcard catch-all for {slug}.atgo.local
+http://:80 {
+	@tenant header_regexp host Host ^(?P<slug>[a-z0-9][a-z0-9-]+)\.atgo\.local$
+	handle @tenant {
+		# Portal (Next.js) for the user-facing pages
+		@api path /api/* /iclock/*
+		handle @api {
+			reverse_proxy api:8000 {
+				header_up X-ATGO-Tenant-Slug {http.regexp.host.slug}
+			}
+		}
+		reverse_proxy portal:3000 {
+			header_up X-ATGO-Tenant-Slug {http.regexp.host.slug}
+		}
+	}
+	respond "Workspace not found" 404
+}
+
+# ============================================================
+# PROD (HTTPS) BLOCKS — atgo.io and custom domains
+# ============================================================
+# Uncomment + remove `auto_https off` above to enable in production.
+# Replace TLS-ALPN with DNS-01 for the wildcard *.atgo.io certificate.
+#
+# atgo.io, www.atgo.io { reverse_proxy portal:3000 }
+# api.atgo.io          { reverse_proxy api:8000 }
+# admin.atgo.io        { reverse_proxy api:8000 }
+# adms.atgo.io {
+#     @allowed path /iclock/*
+#     handle @allowed { reverse_proxy api:8000 }
+#     respond "Not found" 404
+# }
+# cname.atgo.io        { respond "OK" 200 }
+#
+# # Wildcard for tenant workspaces — needs DNS-01 cert for *.atgo.io
+# *.atgo.io {
+#     tls {
+#         dns cloudflare {env.CF_API_TOKEN}
+#     }
+#     @api path /api/* /iclock/*
+#     handle @api { reverse_proxy api:8000 }
+#     reverse_proxy portal:3000
+# }
+#
+# # Custom domains — on-demand TLS, gated by /api/internal/tls-check
+# https:// {
+#     tls {
+#         on_demand
+#     }
+#     @api path /api/* /iclock/*
+#     handle @api { reverse_proxy api:8000 }
+#     reverse_proxy portal:3000
+# }
+#
+# # Short URL for ZK devices on https://atgo.io/{DEVICE_CODE}/iclock/...
+# atgo.io {
+#     @short path_regexp short ^/(?P<dc>[A-Z0-9]{4})/iclock/(?P<rest>.*)$
+#     handle @short {
+#         rewrite * /iclock/{re.short.rest}?{query}&device_code={re.short.dc}
+#         reverse_proxy api:8000
+#     }
+#     reverse_proxy portal:3000
+# }

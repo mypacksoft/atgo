@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="menu_atgo_root" name="ATGO" sequence="50"
+              groups="hr.group_hr_manager"/>
+
+    <menuitem id="menu_atgo_settings" name="Settings"
+              parent="menu_atgo_root"
+              action="action_atgo_config" sequence="10"/>
+
+    <menuitem id="menu_atgo_devices" name="Devices"
+              parent="menu_atgo_root"
+              action="action_atgo_device" sequence="20"/>
+</odoo>

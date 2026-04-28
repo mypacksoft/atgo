@@ -1,0 +1,69 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+.next/
+.turbo/
+out/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Docker / data
+postgres_data/
+redis_data/
+caddy_data/
+caddy_config/
+
+# Local Postgres cluster (dev)
+.pgdata/
+
+# Backup files written by hosts-sync / DB scripts
+*.atgo-backup-*
+hosts.bak
+*.tmp
+*.bak
+*~
+
+# Next.js portal
+apps/portal/.next/
+apps/portal/.turbo/
+apps/portal/out/
+apps/portal/.env*.local
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# ATGO deployment key (fetched by push_to_server.ps1)
+deploy/atgo_deploy_key
+deploy/atgo_deploy_key.pub
+
+# Build artefacts created by publish_odoo_module.sh
+.publish/

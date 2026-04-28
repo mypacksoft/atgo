@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_atgo_device_list" model="ir.ui.view">
+        <field name="name">atgo.device.list</field>
+        <field name="model">atgo.device</field>
+        <field name="arch" type="xml">
+            <list string="ATGO Devices">
+                <field name="name"/>
+                <field name="serial_number"/>
+                <field name="device_code"/>
+                <field name="model"/>
+                <field name="status"/>
+                <field name="is_online"/>
+                <field name="last_seen_at"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_atgo_device" model="ir.actions.act_window">
+        <field name="name">ATGO Devices</field>
+        <field name="res_model">atgo.device</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

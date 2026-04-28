@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Add a "Push to ATGO" button + status fields on the employee form -->
+    <record id="view_hr_employee_form_atgo" model="ir.ui.view">
+        <field name="name">hr.employee.form.atgo</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="action_atgo_push"
+                        string="Push to ATGO"
+                        type="object"
+                        groups="hr.group_hr_manager"/>
+            </header>
+            <xpath expr="//page[@name='hr_settings']" position="inside">
+                <group string="ATGO sync">
+                    <field name="atgo_synced_at" readonly="1"/>
+                    <field name="atgo_sync_error" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Server action: push selected employees -->
+    <record id="action_push_to_atgo" model="ir.actions.server">
+        <field name="name">ATGO: push employees</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_atgo_push()</field>
+    </record>
+</odoo>

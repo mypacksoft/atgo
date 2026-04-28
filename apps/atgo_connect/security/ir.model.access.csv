@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_atgo_config_hr_manager,atgo.config hr_manager,model_atgo_config,hr.group_hr_manager,1,1,1,1
+access_atgo_config_user,atgo.config user,model_atgo_config,base.group_user,1,0,0,0
+access_atgo_device_hr_manager,atgo.device hr_manager,model_atgo_device,hr.group_hr_manager,1,1,1,1
+access_atgo_device_user,atgo.device user,model_atgo_device,base.group_user,1,0,0,0
+access_atgo_log_hr_manager,atgo.attendance.log hr_manager,model_atgo_attendance_log,hr.group_hr_manager,1,1,1,1

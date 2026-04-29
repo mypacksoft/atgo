@@ -68,9 +68,9 @@ maintained in parallel.
 Bug Tracker
 ===========
 
-Report issues at https://github.com/atgo-io/atgo-odoo-connect/issues.
+Report issues at https://github.com/mypacksoft/atgo-odoo-connect/issues.
 
-For security issues, email security@atgo.io rather than opening a public issue.
+For sales / support / general questions: **codekhongbug@gmail.com**.
 
 
 Credits

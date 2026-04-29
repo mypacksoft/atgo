@@ -29,7 +29,7 @@ Setup
     "author": "ATGO",
     "maintainer": "ATGO",
     "website": "https://atgo.io",
-    "support": "support@atgo.io",
+    "support": "codekhongbug@gmail.com",
     "license": "OPL-1",
     "price": 19.00,
     "currency": "USD",

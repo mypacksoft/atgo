@@ -1,0 +1,54 @@
+{
+  "brand": {
+    "tagline": "Cloud Attendance para sa ZKTeco"
+  },
+  "nav": {
+    "overview": "Pangkalahatan",
+    "devices": "Mga device",
+    "employees": "Mga empleyado",
+    "branches": "Mga sangay",
+    "departments": "Mga departamento",
+    "attendance": "Log ng pagdalo",
+    "presence": "Kasalukuyang nagtatrabaho",
+    "dashboard": "Dashboard",
+    "timesheet": "Timesheet",
+    "sync": "Pag-sync",
+    "requests": "Mga kahilingan",
+    "domains": "Mga domain",
+    "billing": "Pagbabayad",
+    "apiKeys": "API key",
+    "settings": "Mga setting",
+    "signOut": "Mag-logout",
+    "signIn": "Mag-login",
+    "signUp": "Gumawa ng workspace",
+    "pricing": "Presyo"
+  },
+  "common": {
+    "save": "I-save",
+    "cancel": "Kanselahin",
+    "delete": "Tanggalin",
+    "edit": "I-edit",
+    "add": "Idagdag",
+    "loading": "Naglo-load…",
+    "yes": "Oo",
+    "no": "Hindi",
+    "active": "Aktibo",
+    "online": "Online",
+    "today": "Ngayon",
+    "month": "Buwan",
+    "year": "Taon",
+    "noData": "Walang data."
+  },
+  "auth": {
+    "signInTitle": "Mag-login",
+    "signUpTitle": "Gumawa ng workspace"
+  },
+  "pricing": {
+    "perMonth": "/buwan",
+    "free": "Libre",
+    "upgrade": "I-upgrade"
+  },
+  "lang": {
+    "switcherLabel": "Wika"
+  }
+}

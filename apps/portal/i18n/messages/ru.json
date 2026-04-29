@@ -1,0 +1,55 @@
+{
+  "brand": {
+    "tagline": "Облачный учёт времени для ZKTeco"
+  },
+  "nav": {
+    "overview": "Обзор",
+    "devices": "Устройства",
+    "employees": "Сотрудники",
+    "branches": "Филиалы",
+    "departments": "Отделы",
+    "attendance": "Журнал входа",
+    "presence": "Сейчас на работе",
+    "dashboard": "Панель",
+    "timesheet": "Табель",
+    "sync": "Синхронизация",
+    "requests": "Запросы",
+    "domains": "Домены",
+    "billing": "Оплата",
+    "apiKeys": "API-ключи",
+    "settings": "Настройки",
+    "signOut": "Выйти",
+    "signIn": "Войти",
+    "signUp": "Создать рабочее пространство",
+    "pricing": "Цены"
+  },
+  "common": {
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "edit": "Изменить",
+    "add": "Добавить",
+    "loading": "Загрузка…",
+    "yes": "Да",
+    "no": "Нет",
+    "active": "Активный",
+    "online": "В сети",
+    "offline": "Не в сети",
+    "today": "Сегодня",
+    "month": "Месяц",
+    "year": "Год",
+    "noData": "Нет данных."
+  },
+  "auth": {
+    "signInTitle": "Войти",
+    "signUpTitle": "Создать рабочее пространство"
+  },
+  "pricing": {
+    "perMonth": "/мес",
+    "free": "Бесплатно",
+    "upgrade": "Улучшить"
+  },
+  "lang": {
+    "switcherLabel": "Язык"
+  }
+}

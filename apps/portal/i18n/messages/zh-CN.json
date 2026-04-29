@@ -1,0 +1,145 @@
+{
+  "brand": { "name": "ATGO", "tagline": "ZKTeco 云考勤" },
+  "nav": {
+    "overview": "概览", "devices": "考勤机", "employees": "员工",
+    "branches": "分支机构", "departments": "部门", "attendance": "打卡记录",
+    "presence": "在线员工", "dashboard": "仪表盘", "timesheet": "考勤表",
+    "sync": "设备同步", "requests": "申请", "domains": "域名",
+    "billing": "账单", "apiKeys": "API 密钥", "odoo": "Odoo",
+    "settings": "设置", "signOut": "退出", "signIn": "登录",
+    "signUp": "创建工作区", "pricing": "定价"
+  },
+  "common": {
+    "save": "保存", "cancel": "取消", "delete": "删除", "edit": "编辑",
+    "add": "添加", "remove": "移除", "create": "创建", "update": "更新",
+    "search": "搜索", "filter": "筛选", "loading": "加载中…", "saving": "保存中…",
+    "success": "已保存", "error": "错误", "back": "返回", "next": "下一步",
+    "yes": "是", "no": "否", "active": "活跃", "inactive": "停用",
+    "online": "在线", "offline": "离线", "today": "今天", "yesterday": "昨天",
+    "month": "月", "year": "年", "from": "从", "to": "到",
+    "apply": "应用", "retry": "重试", "copy": "复制", "copied": "已复制",
+    "name": "名称", "email": "邮箱", "password": "密码", "fullName": "姓名",
+    "phone": "电话", "code": "代码", "status": "状态", "actions": "操作",
+    "verify": "验证", "noData": "无数据。"
+  },
+  "auth": {
+    "signInTitle": "登录", "signUpTitle": "创建工作区",
+    "passwordHint": "至少 8 个字符", "companyName": "公司名称",
+    "workspaceUrl": "工作区 URL",
+    "workspaceUrlHint": "仅小写字母、数字、连字符。",
+    "alreadyHaveAccount": "已有账户?", "newHere": "新用户?",
+    "createWorkspace": "创建工作区",
+    "invalidCredentials": "凭据无效",
+    "passwordTooShort": "密码至少 8 个字符。"
+  },
+  "landing": {
+    "headline": "ZKTeco 免费在线考勤 — 无需固定 IP、无需端口转发、无需本地服务器。",
+    "sub": "将 ZKTeco 设备接入 ATGO Cloud,在线管理员工,数据直接推送到 Odoo HR。1 台设备免费,员工无限,Business 套餐起支持自定义域名。",
+    "ctaPrimary": "免费创建工作区", "ctaSecondary": "查看定价",
+    "feature1Title": "云端同步,零烦恼",
+    "feature1": "将 ZKTeco 设备指向我们的云端,几秒内打卡数据流入您的工作区。无需 VPN、无需 DDNS。",
+    "feature2Title": "内置 Odoo HR",
+    "feature2": "安装 Odoo 连接器,粘贴 API 密钥,ATGO 自动将 hr.attendance 推送到 Odoo 16 / 17 / 18 / 19。",
+    "feature3Title": "员工自助",
+    "feature3": "每位员工有专属 PWA 查看自己的考勤、发现漏打卡并申请修正。",
+    "feature4Title": "自定义域名",
+    "feature4": "Business 及以上套餐可将 attendance.yourcompany.com 接入工作区。",
+    "feature5Title": "多设备同步",
+    "feature5": "在线管理员工并一次推送至多台设备。生物识别数据不会存储于服务器。",
+    "feature6Title": "隐私优先",
+    "feature6": "USERPIC / FACE / FP / BIODATA / FINGERTMP / ATTPHOTO 等数据在落库前剥离。Postgres RLS 强制租户隔离。"
+  },
+  "pricing": {
+    "title": "定价", "perMonth": "/月", "currentPlan": "当前套餐",
+    "free": "免费", "starter": "入门", "business": "商业", "scale": "扩展", "hrPro": "HR 专业",
+    "mostPopular": "最受欢迎",
+    "upgrade": "升级", "switchTo": "切换到 {plan}", "upgradeTo": "升级到 {plan}",
+    "vatIncluded": "含增值税", "vatExcluded": "结账时计算税费"
+  },
+  "plan": {
+    "devicesLimit": "{n} 台设备", "devicesUnlimited": "设备无限制",
+    "employeesUnlimited": "员工无限制", "retentionDays": "日志保留 {n} 天",
+    "logsQuota": "{n} 条日志/月", "noCustomDomain": "不含自定义域名",
+    "customDomain": "{n} 个自定义域名", "advancedRules": "高级规则",
+    "shiftMgmt": "排班管理", "leaveReq": "请假申请", "payrollExport": "薪资导出"
+  },
+  "devices": {
+    "title": "考勤机", "addDevice": "添加设备",
+    "deviceName": "设备名称", "serial": "序列号", "deviceCode": "设备代码",
+    "model": "型号", "firmware": "固件", "lastSeen": "最近在线",
+    "claimCode": "认领码", "claimExpires": "认领码到期",
+    "verifyClaim": "验证认领", "pendingClaim": "等待认领",
+    "disabled": "已禁用", "deviceTimezone": "设备时区"
+  },
+  "employees": {
+    "title": "员工", "addEmployee": "添加员工",
+    "employeeCode": "工号", "devicePin": "考勤号",
+    "department": "部门", "branch": "分支",
+    "cardNumber": "卡号", "hiredAt": "入职日期",
+    "terminatedAt": "离职日期", "autoCreated": "自动创建"
+  },
+  "presence": {
+    "title": "在线员工", "subtitle": "已签到但尚未签退的员工。",
+    "autoRefresh": "30 秒自动刷新", "noOne": "目前无人签到。",
+    "duration": "时长", "checkedInAt": "签到时间", "device": "设备"
+  },
+  "dashboardGrid": {
+    "title": "考勤 / 请假仪表盘",
+    "legendPresent": "出勤", "legendAbsent": "缺勤",
+    "legendLeave": "请假", "legendHoliday": "假日", "legendWeekend": "周末"
+  },
+  "timesheet": {
+    "title": "考勤表", "downloadExcel": "下载 Excel",
+    "viewGrid": "网格", "viewDetail": "详细",
+    "totalHours": "总时数", "monthLabel": "{n} 月"
+  },
+  "billing": {
+    "currentPlan": "当前套餐", "renews": "续订",
+    "provider": "支付商", "deviceLimit": "设备上限",
+    "customDomains": "自定义域名", "notIncluded": "不包含",
+    "upgradeTitle": "升级套餐", "changeTitle": "更换套餐",
+    "payWith": "支付方式", "default": "默认",
+    "freeBanner": "解锁更多 ATGO 功能",
+    "freeBannerSub": "您正在使用免费套餐。升级以增加设备、绑定自定义域名、延长日志保留并解锁 HR 功能。"
+  },
+  "domains": {
+    "workspaceUrl": "工作区 URL",
+    "workspaceUrlSub": "始终可用 — 即使降级也无法删除。",
+    "customDomain": "自定义域名", "addDomain": "添加域名",
+    "domainPlaceholder": "attendance.yourcompany.com",
+    "stepByStep": "分步指南",
+    "cnameInstruction": "CNAME 记录(必需)",
+    "txtInstruction": "TXT 记录(验证)",
+    "verifyDns": "立即验证 DNS",
+    "primary": "主域", "makePrimary": "设为主域",
+    "showInstructions": "查看 DNS 说明", "reverify": "重新验证",
+    "expiresAt": "此待验证域名在 {date} 过期,请在此之前完成验证。"
+  },
+  "settings": {
+    "title": "工作区设置",
+    "autoSync": "自动同步",
+    "autoSyncSub": "开启后,ATGO 会创建占位员工而不是丢弃数据。",
+    "autoCreateMachine": "从考勤机自动创建员工",
+    "autoCreateMachineSub": "当考勤机发送的 PIN 不在员工列表中时 → 创建名为 \"Unknown PIN xxx\" 的新员工。HR 之后可改名。",
+    "autoCreateOdoo": "从 Odoo 自动创建员工",
+    "autoCreateOdooSub": "当 Odoo 插件推送新 hr.employee → 在 ATGO 中创建并双向链接 odoo_id。",
+    "workSchedule": "工作时间表",
+    "workWeekDays": "每周工作天数",
+    "standardShift": "标准班次(分钟/天)"
+  },
+  "status": {
+    "present": "出勤", "absent": "缺勤", "missingCheckout": "未签退",
+    "active": "活跃", "verified": "已验证", "pending": "待处理",
+    "expired": "已过期", "restricted": "受限",
+    "trialing": "试用中", "pastDue": "逾期", "cancelled": "已取消"
+  },
+  "errors": {
+    "networkError": "网络错误",
+    "sessionExpired": "会话过期,请重新登录。",
+    "notAuthorized": "未授权。",
+    "tryAgain": "出错了,请重试。",
+    "domainAlreadyClaimed": "此域名已被其他工作区使用。",
+    "slugTaken": "此工作区 URL 已被占用。"
+  },
+  "lang": { "switcherLabel": "语言" }
+}

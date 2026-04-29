@@ -1,0 +1,55 @@
+{
+  "brand": {
+    "tagline": "Asistencia en la nube para ZKTeco"
+  },
+  "nav": {
+    "overview": "Resumen",
+    "devices": "Dispositivos",
+    "employees": "Empleados",
+    "branches": "Sucursales",
+    "departments": "Departamentos",
+    "attendance": "Registro de asistencia",
+    "presence": "Trabajando ahora",
+    "dashboard": "Panel",
+    "timesheet": "Hoja de horas",
+    "sync": "Sincronización",
+    "requests": "Solicitudes",
+    "domains": "Dominios",
+    "billing": "Facturación",
+    "apiKeys": "Claves API",
+    "settings": "Ajustes",
+    "signOut": "Cerrar sesión",
+    "signIn": "Iniciar sesión",
+    "signUp": "Crear espacio de trabajo",
+    "pricing": "Precios"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Agregar",
+    "loading": "Cargando…",
+    "yes": "Sí",
+    "no": "No",
+    "active": "Activo",
+    "online": "En línea",
+    "offline": "Desconectado",
+    "today": "Hoy",
+    "month": "Mes",
+    "year": "Año",
+    "noData": "Sin datos."
+  },
+  "auth": {
+    "signInTitle": "Iniciar sesión",
+    "signUpTitle": "Crear espacio de trabajo"
+  },
+  "pricing": {
+    "perMonth": "/mes",
+    "free": "Gratis",
+    "upgrade": "Mejorar"
+  },
+  "lang": {
+    "switcherLabel": "Idioma"
+  }
+}

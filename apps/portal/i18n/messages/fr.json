@@ -1,0 +1,55 @@
+{
+  "brand": {
+    "tagline": "Pointage cloud pour ZKTeco"
+  },
+  "nav": {
+    "overview": "Aperçu",
+    "devices": "Appareils",
+    "employees": "Employés",
+    "branches": "Filiales",
+    "departments": "Départements",
+    "attendance": "Journal de pointage",
+    "presence": "Au travail",
+    "dashboard": "Tableau de bord",
+    "timesheet": "Feuille de temps",
+    "sync": "Synchronisation",
+    "requests": "Demandes",
+    "domains": "Domaines",
+    "billing": "Facturation",
+    "apiKeys": "Clés API",
+    "settings": "Paramètres",
+    "signOut": "Déconnexion",
+    "signIn": "Connexion",
+    "signUp": "Créer un espace de travail",
+    "pricing": "Tarifs"
+  },
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "loading": "Chargement…",
+    "yes": "Oui",
+    "no": "Non",
+    "active": "Actif",
+    "online": "En ligne",
+    "offline": "Hors ligne",
+    "today": "Aujourd'hui",
+    "month": "Mois",
+    "year": "Année",
+    "noData": "Aucune donnée."
+  },
+  "auth": {
+    "signInTitle": "Connexion",
+    "signUpTitle": "Créer un espace de travail"
+  },
+  "pricing": {
+    "perMonth": "/mois",
+    "free": "Gratuit",
+    "upgrade": "Mettre à niveau"
+  },
+  "lang": {
+    "switcherLabel": "Langue"
+  }
+}

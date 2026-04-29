@@ -204,14 +204,29 @@ async def _ingest_attlog(session, tenant_id: int, device_id: int, serial: str,
                           device_tz: str | None, body: str, raw_id: int) -> None:
     """Parse ATTLOG body and upsert normalized rows.
 
-    Employee mapping by (tenant_id, device_pin) — None if not yet mapped.
+    Employee mapping by (tenant_id, device_pin). When a PIN appears that has
+    no matching employee:
+      - If tenants.auto_create_from_machine = TRUE → create a placeholder
+        employee (auto_created=true, source='machine') so HR can rename later.
+      - Otherwise leave employee_id NULL; the log is still recorded with
+        device_pin only.
+
+    Also maintains employee_presence: insert on check-in (state 0/None),
+    delete on check-out (state 1).
     """
     rows = list(parse_attlog(body))
     if not rows:
         return
 
-    # Bulk fetch employee_id mapping by PIN
     pins = list({r.pin for r in rows})
+
+    # Read tenant policy + existing PIN→id mapping in parallel (1 round-trip each)
+    cfg = await session.execute(
+        text("SELECT auto_create_from_machine FROM tenants WHERE id = :tid"),
+        {"tid": tenant_id},
+    )
+    auto_create = bool(cfg.scalar())
+
     map_q = await session.execute(
         text(
             "SELECT device_pin, id FROM employees "
@@ -221,9 +236,59 @@ async def _ingest_attlog(session, tenant_id: int, device_id: int, serial: str,
     )
     pin_to_eid: dict[str, int] = {r["device_pin"]: r["id"] for r in map_q.mappings()}
 
+    # Auto-create missing PINs
+    missing = [p for p in pins if p not in pin_to_eid]
+    if missing and auto_create:
+        for pin in missing:
+            try:
+                ins = await session.execute(
+                    text(
+                        "INSERT INTO employees "
+                        "(tenant_id, employee_code, device_pin, full_name, "
+                        " is_active, auto_created, source) "
+                        "VALUES (:tid, :code, :pin, :name, TRUE, TRUE, 'machine') "
+                        "ON CONFLICT (tenant_id, device_pin) DO NOTHING "
+                        "RETURNING id"
+                    ),
+                    {
+                        "tid": tenant_id,
+                        "code": f"AUTO-{pin}",
+                        "pin": pin,
+                        "name": f"Unknown PIN {pin}",
+                    },
+                )
+                new_id = ins.scalar()
+                if new_id:
+                    pin_to_eid[pin] = new_id
+                else:
+                    # Conflict on employee_code — retry with timestamp suffix
+                    import time
+                    suffix = int(time.time()) % 100000
+                    ins = await session.execute(
+                        text(
+                            "INSERT INTO employees "
+                            "(tenant_id, employee_code, device_pin, full_name, "
+                            " is_active, auto_created, source) "
+                            "VALUES (:tid, :code, :pin, :name, TRUE, TRUE, 'machine') "
+                            "ON CONFLICT (tenant_id, device_pin) DO NOTHING RETURNING id"
+                        ),
+                        {
+                            "tid": tenant_id,
+                            "code": f"AUTO-{pin}-{suffix}",
+                            "pin": pin,
+                            "name": f"Unknown PIN {pin}",
+                        },
+                    )
+                    nid = ins.scalar()
+                    if nid:
+                        pin_to_eid[pin] = nid
+            except Exception:
+                pass  # never fail the whole batch over one PIN
+
     for r in rows:
         punched_utc = r.to_utc(device_tz)
         idem = r.idempotency_key(serial)
+        eid = pin_to_eid.get(r.pin)
         await session.execute(
             text(
                 "INSERT INTO normalized_attendance_logs "
@@ -234,13 +299,39 @@ async def _ingest_attlog(session, tenant_id: int, device_id: int, serial: str,
             ),
             {
                 "tid": tenant_id, "did": device_id,
-                "eid": pin_to_eid.get(r.pin),
+                "eid": eid,
                 "pin": r.pin,
                 "pat": punched_utc,
                 "ps": r.punch_state, "vt": r.verify_type, "wc": r.work_code,
                 "idem": idem, "rid": raw_id,
             },
         )
+
+        # Maintain presence (currently clocked in)
+        if eid is None:
+            continue
+        if r.punch_state == 0 or r.punch_state is None:
+            # check-in (or auto-toggle treated as in)
+            await session.execute(
+                text(
+                    "INSERT INTO employee_presence "
+                    "(tenant_id, employee_id, device_id, last_in_at) "
+                    "VALUES (:tid, :eid, :did, :pat) "
+                    "ON CONFLICT (tenant_id, employee_id) DO UPDATE "
+                    "  SET last_in_at = EXCLUDED.last_in_at, "
+                    "      device_id = EXCLUDED.device_id"
+                ),
+                {"tid": tenant_id, "eid": eid, "did": device_id, "pat": punched_utc},
+            )
+        elif r.punch_state == 1:
+            # check-out — clear presence row
+            await session.execute(
+                text(
+                    "DELETE FROM employee_presence "
+                    "WHERE tenant_id = :tid AND employee_id = :eid"
+                ),
+                {"tid": tenant_id, "eid": eid},
+            )
 
 
 # ===== GET /iclock/getrequest?SN=... =====

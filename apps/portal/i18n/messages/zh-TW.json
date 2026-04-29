@@ -1,0 +1,65 @@
+{
+  "brand": {
+    "tagline": "ZKTeco 雲端考勤"
+  },
+  "nav": {
+    "overview": "總覽",
+    "devices": "考勤機",
+    "employees": "員工",
+    "branches": "分支機構",
+    "departments": "部門",
+    "attendance": "打卡記錄",
+    "presence": "在場員工",
+    "dashboard": "儀表板",
+    "timesheet": "考勤表",
+    "sync": "設備同步",
+    "requests": "申請",
+    "domains": "網域",
+    "billing": "帳單",
+    "apiKeys": "API 金鑰",
+    "odoo": "Odoo",
+    "settings": "設定",
+    "signOut": "登出",
+    "signIn": "登入",
+    "signUp": "建立工作區",
+    "pricing": "價格"
+  },
+  "common": {
+    "save": "儲存",
+    "cancel": "取消",
+    "delete": "刪除",
+    "edit": "編輯",
+    "add": "新增",
+    "remove": "移除",
+    "search": "搜尋",
+    "loading": "載入中…",
+    "saving": "儲存中…",
+    "yes": "是",
+    "no": "否",
+    "active": "啟用",
+    "online": "線上",
+    "offline": "離線",
+    "today": "今天",
+    "month": "月",
+    "year": "年",
+    "noData": "無資料。",
+    "actions": "操作",
+    "verify": "驗證"
+  },
+  "auth": {
+    "signInTitle": "登入",
+    "signUpTitle": "建立工作區",
+    "createWorkspace": "建立工作區",
+    "newHere": "新使用者?",
+    "alreadyHaveAccount": "已有帳戶?"
+  },
+  "pricing": {
+    "perMonth": "/月",
+    "free": "免費",
+    "upgrade": "升級",
+    "mostPopular": "最受歡迎"
+  },
+  "lang": {
+    "switcherLabel": "語言"
+  }
+}

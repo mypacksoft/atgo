@@ -4,6 +4,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -14,7 +15,7 @@ from ..constants import (
     RESERVED_SUBDOMAINS,
     SYSTEM_DOMAIN_BLOCKLIST,
 )
-from ..deps import db_session, tenant_session
+from ..deps import current_user, db_session, tenant_session
 from ..models import Tenant, TenantDomain
 from ..schemas import (
     DomainAddRequest,
@@ -268,6 +269,80 @@ async def delete_domain(domain_id: int, ctx=Depends(tenant_session)):
 async def my_tenant(ctx=Depends(tenant_session)):
     session, tenant = ctx
     return TenantOut.model_validate(tenant)
+
+
+# ===== User locale preference =====
+
+_SUPPORTED_LOCALES = {
+    "en", "vi", "zh-CN", "zh-TW", "id", "th", "ms", "fil",
+    "hi", "ar", "es", "pt-BR", "ru", "tr", "fr",
+}
+
+
+class LocaleRequest(BaseModel):
+    locale: str
+
+
+@router.post("/me/locale", include_in_schema=False)
+async def set_my_locale(
+    payload: LocaleRequest,
+    user=Depends(current_user),
+    session: AsyncSession = Depends(db_session),
+):
+    if payload.locale not in _SUPPORTED_LOCALES:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "unsupported locale")
+    await session.execute(
+        text("UPDATE users SET locale = :l, updated_at = NOW() WHERE id = :id"),
+        {"l": payload.locale, "id": user.id},
+    )
+    return {"ok": True, "locale": payload.locale}
+
+
+# ===== Tenant settings (auto-sync, work week, etc.) =====
+
+class TenantSettingsOut(BaseModel):
+    auto_create_from_machine: bool
+    auto_create_from_odoo: bool
+    work_week_days: int
+    standard_shift_minutes: int
+
+
+class TenantSettingsUpdate(BaseModel):
+    auto_create_from_machine: bool | None = None
+    auto_create_from_odoo: bool | None = None
+    work_week_days: int | None = None
+    standard_shift_minutes: int | None = None
+
+
+@router.get("/me/settings", response_model=TenantSettingsOut)
+async def get_tenant_settings(ctx=Depends(tenant_session)):
+    session, tenant = ctx
+    res = await session.execute(
+        text(
+            "SELECT auto_create_from_machine, auto_create_from_odoo, "
+            "       work_week_days, standard_shift_minutes "
+            "FROM tenants WHERE id = :id"
+        ),
+        {"id": tenant.id},
+    )
+    return TenantSettingsOut.model_validate(dict(res.mappings().first() or {}))
+
+
+@router.patch("/me/settings", response_model=TenantSettingsOut)
+async def update_tenant_settings(payload: TenantSettingsUpdate, ctx=Depends(tenant_session)):
+    session, tenant = ctx
+    fields = payload.model_dump(exclude_unset=True)
+    if not fields:
+        return await get_tenant_settings(ctx)
+    if "work_week_days" in fields and fields["work_week_days"] not in (5, 6, 7):
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "work_week_days must be 5, 6, or 7")
+    sets = ", ".join(f"{k} = :{k}" for k in fields)
+    fields["id"] = tenant.id
+    await session.execute(
+        text(f"UPDATE tenants SET {sets}, updated_at = NOW() WHERE id = :id"),
+        fields,
+    )
+    return await get_tenant_settings(ctx)
 
 
 # tls-check moved to atgo_api.routers.internal — that one validates the slug

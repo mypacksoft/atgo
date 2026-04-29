@@ -1,0 +1,56 @@
+{
+  "brand": {
+    "tagline": "ระบบลงเวลาคลาวด์สำหรับ ZKTeco"
+  },
+  "nav": {
+    "overview": "ภาพรวม",
+    "devices": "เครื่องสแกน",
+    "employees": "พนักงาน",
+    "branches": "สาขา",
+    "departments": "แผนก",
+    "attendance": "บันทึกการลงเวลา",
+    "presence": "กำลังทำงาน",
+    "dashboard": "แดชบอร์ด",
+    "timesheet": "ตารางเวลา",
+    "sync": "ซิงค์อุปกรณ์",
+    "requests": "คำขอ",
+    "domains": "โดเมน",
+    "billing": "การเรียกเก็บเงิน",
+    "apiKeys": "คีย์ API",
+    "settings": "ตั้งค่า",
+    "signOut": "ออก",
+    "signIn": "เข้าสู่ระบบ",
+    "signUp": "สร้างเวิร์กสเปซ",
+    "pricing": "ราคา"
+  },
+  "common": {
+    "save": "บันทึก",
+    "cancel": "ยกเลิก",
+    "delete": "ลบ",
+    "edit": "แก้ไข",
+    "add": "เพิ่ม",
+    "loading": "กำลังโหลด…",
+    "yes": "ใช่",
+    "no": "ไม่",
+    "active": "ใช้งาน",
+    "online": "ออนไลน์",
+    "offline": "ออฟไลน์",
+    "today": "วันนี้",
+    "month": "เดือน",
+    "year": "ปี",
+    "noData": "ไม่มีข้อมูล"
+  },
+  "auth": {
+    "signInTitle": "เข้าสู่ระบบ",
+    "signUpTitle": "สร้างเวิร์กสเปซ",
+    "newHere": "ผู้ใช้ใหม่?"
+  },
+  "pricing": {
+    "perMonth": "/เดือน",
+    "free": "ฟรี",
+    "upgrade": "อัปเกรด"
+  },
+  "lang": {
+    "switcherLabel": "ภาษา"
+  }
+}

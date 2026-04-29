@@ -1,0 +1,54 @@
+{
+  "brand": {
+    "tagline": "ZKTeco için bulut puantaj"
+  },
+  "nav": {
+    "overview": "Genel bakış",
+    "devices": "Cihazlar",
+    "employees": "Çalışanlar",
+    "branches": "Şubeler",
+    "departments": "Departmanlar",
+    "attendance": "Devam kayıtları",
+    "presence": "Şu an çalışıyor",
+    "dashboard": "Panel",
+    "timesheet": "Mesai çizelgesi",
+    "sync": "Cihaz senkronu",
+    "requests": "Talepler",
+    "domains": "Alan adları",
+    "billing": "Faturalama",
+    "apiKeys": "API anahtarları",
+    "settings": "Ayarlar",
+    "signOut": "Çıkış",
+    "signIn": "Giriş",
+    "signUp": "Çalışma alanı oluştur",
+    "pricing": "Fiyatlar"
+  },
+  "common": {
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "add": "Ekle",
+    "loading": "Yükleniyor…",
+    "yes": "Evet",
+    "no": "Hayır",
+    "active": "Aktif",
+    "online": "Çevrimiçi",
+    "today": "Bugün",
+    "month": "Ay",
+    "year": "Yıl",
+    "noData": "Veri yok."
+  },
+  "auth": {
+    "signInTitle": "Giriş yap",
+    "signUpTitle": "Çalışma alanı oluştur"
+  },
+  "pricing": {
+    "perMonth": "/ay",
+    "free": "Ücretsiz",
+    "upgrade": "Yükselt"
+  },
+  "lang": {
+    "switcherLabel": "Dil"
+  }
+}

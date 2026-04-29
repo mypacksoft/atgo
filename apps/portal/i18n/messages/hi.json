@@ -1,0 +1,54 @@
+{
+  "brand": {
+    "tagline": "ZKTeco के लिए क्लाउड उपस्थिति"
+  },
+  "nav": {
+    "overview": "अवलोकन",
+    "devices": "उपकरण",
+    "employees": "कर्मचारी",
+    "branches": "शाखाएँ",
+    "departments": "विभाग",
+    "attendance": "उपस्थिति लॉग",
+    "presence": "अभी कार्यरत",
+    "dashboard": "डैशबोर्ड",
+    "timesheet": "टाइमशीट",
+    "sync": "डिवाइस सिंक",
+    "requests": "अनुरोध",
+    "domains": "डोमेन",
+    "billing": "बिलिंग",
+    "apiKeys": "API कुंजी",
+    "settings": "सेटिंग्स",
+    "signOut": "साइन आउट",
+    "signIn": "साइन इन",
+    "signUp": "वर्कस्पेस बनाएं",
+    "pricing": "मूल्य"
+  },
+  "common": {
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएँ",
+    "edit": "संपादित",
+    "add": "जोड़ें",
+    "loading": "लोड हो रहा…",
+    "yes": "हाँ",
+    "no": "नहीं",
+    "active": "सक्रिय",
+    "online": "ऑनलाइन",
+    "today": "आज",
+    "month": "महीना",
+    "year": "वर्ष",
+    "noData": "कोई डेटा नहीं।"
+  },
+  "auth": {
+    "signInTitle": "साइन इन",
+    "signUpTitle": "वर्कस्पेस बनाएं"
+  },
+  "pricing": {
+    "perMonth": "/माह",
+    "free": "मुफ्त",
+    "upgrade": "अपग्रेड"
+  },
+  "lang": {
+    "switcherLabel": "भाषा"
+  }
+}

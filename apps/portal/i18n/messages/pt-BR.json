@@ -1,0 +1,55 @@
+{
+  "brand": {
+    "tagline": "Ponto em nuvem para ZKTeco"
+  },
+  "nav": {
+    "overview": "Visão geral",
+    "devices": "Dispositivos",
+    "employees": "Funcionários",
+    "branches": "Filiais",
+    "departments": "Departamentos",
+    "attendance": "Registro de ponto",
+    "presence": "Trabalhando agora",
+    "dashboard": "Painel",
+    "timesheet": "Folha de ponto",
+    "sync": "Sincronização",
+    "requests": "Solicitações",
+    "domains": "Domínios",
+    "billing": "Faturamento",
+    "apiKeys": "Chaves de API",
+    "settings": "Configurações",
+    "signOut": "Sair",
+    "signIn": "Entrar",
+    "signUp": "Criar workspace",
+    "pricing": "Preços"
+  },
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "add": "Adicionar",
+    "loading": "Carregando…",
+    "yes": "Sim",
+    "no": "Não",
+    "active": "Ativo",
+    "online": "On-line",
+    "offline": "Off-line",
+    "today": "Hoje",
+    "month": "Mês",
+    "year": "Ano",
+    "noData": "Sem dados."
+  },
+  "auth": {
+    "signInTitle": "Entrar",
+    "signUpTitle": "Criar workspace"
+  },
+  "pricing": {
+    "perMonth": "/mês",
+    "free": "Grátis",
+    "upgrade": "Atualizar"
+  },
+  "lang": {
+    "switcherLabel": "Idioma"
+  }
+}

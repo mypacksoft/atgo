@@ -1,11 +1,14 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { api, setToken } from "../../lib/api";
 import type { TokenPair } from "../../lib/types";
+import LangSwitcher from "../../components/LangSwitcher";
 
 export default function LoginPage() {
   const router = useRouter();
+  const t = useTranslations();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -49,22 +52,25 @@ export default function LoginPage() {
   return (
     <div className="center">
       <div className="card" style={{ width: "min(420px, 92vw)" }}>
-        <h1>Sign in</h1>
+        <div className="row" style={{ justifyContent: "space-between", alignItems: "center", marginBottom: "0.6rem" }}>
+          <h1 style={{ margin: 0 }}>{t("auth.signInTitle")}</h1>
+          <LangSwitcher compact />
+        </div>
         <form onSubmit={onSubmit} className="grid" style={{ marginTop: "1rem" }}>
           <label>
-            Email
+            {t("common.email")}
             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </label>
           <label>
-            Password
+            {t("common.password")}
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </label>
           {error && <div className="errbox">{error}</div>}
           <button className="btn" type="submit" disabled={submitting}>
-            {submitting ? "Signing in…" : "Sign in"}
+            {submitting ? t("common.loading") : t("auth.signInTitle")}
           </button>
           <p className="muted" style={{ textAlign: "center", margin: 0 }}>
-            New here? <a href="/signup">Create a workspace</a>
+            {t("auth.newHere")} <a href="/signup">{t("auth.createWorkspace")}</a>
           </p>
         </form>
       </div>

@@ -1,0 +1,58 @@
+{
+  "brand": {
+    "tagline": "Absensi Cloud untuk ZKTeco"
+  },
+  "nav": {
+    "overview": "Ikhtisar",
+    "devices": "Perangkat",
+    "employees": "Karyawan",
+    "branches": "Cabang",
+    "departments": "Departemen",
+    "attendance": "Log absensi",
+    "presence": "Sedang bekerja",
+    "dashboard": "Dasbor",
+    "timesheet": "Lembar waktu",
+    "sync": "Sinkronisasi",
+    "requests": "Permintaan",
+    "domains": "Domain",
+    "billing": "Penagihan",
+    "apiKeys": "Kunci API",
+    "settings": "Pengaturan",
+    "signOut": "Keluar",
+    "signIn": "Masuk",
+    "signUp": "Buat workspace",
+    "pricing": "Harga"
+  },
+  "common": {
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "edit": "Ubah",
+    "add": "Tambah",
+    "remove": "Hapus",
+    "search": "Cari",
+    "loading": "Memuat…",
+    "yes": "Ya",
+    "no": "Tidak",
+    "active": "Aktif",
+    "online": "Online",
+    "offline": "Offline",
+    "today": "Hari ini",
+    "month": "Bulan",
+    "year": "Tahun",
+    "noData": "Tidak ada data."
+  },
+  "auth": {
+    "signInTitle": "Masuk",
+    "signUpTitle": "Buat workspace",
+    "newHere": "Baru di sini?"
+  },
+  "pricing": {
+    "perMonth": "/bln",
+    "free": "Gratis",
+    "upgrade": "Tingkatkan"
+  },
+  "lang": {
+    "switcherLabel": "Bahasa"
+  }
+}

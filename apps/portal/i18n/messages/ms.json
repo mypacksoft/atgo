@@ -1,0 +1,55 @@
+{
+  "brand": {
+    "tagline": "Kehadiran Awan untuk ZKTeco"
+  },
+  "nav": {
+    "overview": "Gambaran",
+    "devices": "Peranti",
+    "employees": "Pekerja",
+    "branches": "Cawangan",
+    "departments": "Jabatan",
+    "attendance": "Log kehadiran",
+    "presence": "Sedang bekerja",
+    "dashboard": "Papan pemuka",
+    "timesheet": "Helaian masa",
+    "sync": "Penyegerakan",
+    "requests": "Permintaan",
+    "domains": "Domain",
+    "billing": "Pengebilan",
+    "apiKeys": "Kunci API",
+    "settings": "Tetapan",
+    "signOut": "Log keluar",
+    "signIn": "Log masuk",
+    "signUp": "Cipta workspace",
+    "pricing": "Harga"
+  },
+  "common": {
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Padam",
+    "edit": "Edit",
+    "add": "Tambah",
+    "search": "Cari",
+    "loading": "Memuatkan…",
+    "yes": "Ya",
+    "no": "Tidak",
+    "active": "Aktif",
+    "online": "Dalam talian",
+    "today": "Hari ini",
+    "month": "Bulan",
+    "year": "Tahun",
+    "noData": "Tiada data."
+  },
+  "auth": {
+    "signInTitle": "Log masuk",
+    "signUpTitle": "Cipta workspace"
+  },
+  "pricing": {
+    "perMonth": "/bln",
+    "free": "Percuma",
+    "upgrade": "Naik taraf"
+  },
+  "lang": {
+    "switcherLabel": "Bahasa"
+  }
+}

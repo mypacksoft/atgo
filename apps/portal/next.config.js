@@ -1,16 +1,17 @@
 /** @type {import('next').NextConfig} */
+const createNextIntlPlugin = require("next-intl/plugin");
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
+
 const apiBase = process.env.INTERNAL_API_BASE || process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
 
-module.exports = {
+module.exports = withNextIntl({
   reactStrictMode: true,
   output: "standalone",
   experimental: { typedRoutes: false },
   async rewrites() {
-    // Forward API + ADMS calls from the same Next host through to FastAPI.
-    // This means {slug}.atgo.io/api/... goes through Caddy -> portal -> rewrite -> api.
     return [
       { source: "/api/:path*",   destination: `${apiBase}/api/:path*` },
       { source: "/iclock/:path*", destination: `${apiBase}/iclock/:path*` },
     ];
   },
-};
+});

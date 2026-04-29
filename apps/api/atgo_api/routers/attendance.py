@@ -1,6 +1,7 @@
-"""Attendance log query + monthly timesheet + Excel export."""
+"""Attendance log query + monthly timesheet + Excel export + dashboard."""
 from __future__ import annotations
 
+import calendar
 import io
 from datetime import date, datetime, time, timedelta, timezone
 
@@ -12,6 +13,197 @@ from ..deps import tenant_session
 from ..schemas import AttendanceLogOut, TimesheetRow
 
 router = APIRouter()
+
+
+# ============================================================
+# Currently clocked-in employees (Nhân viên hiện diện)
+# ============================================================
+
+@router.get("/presence")
+async def list_presence(ctx=Depends(tenant_session)):
+    """Employees currently checked in (last punch was check-in, no check-out yet)."""
+    session, tenant = ctx
+    res = await session.execute(
+        text(
+            "SELECT p.employee_id, p.last_in_at, p.device_id, "
+            "  e.employee_code, e.full_name, e.device_pin, "
+            "  d.name AS device_name, d.device_code, "
+            "  dep.name AS department_name "
+            "FROM employee_presence p "
+            "JOIN employees e ON e.id = p.employee_id "
+            "LEFT JOIN devices d ON d.id = p.device_id "
+            "LEFT JOIN departments dep ON dep.id = e.department_id "
+            "WHERE p.tenant_id = :tid "
+            "ORDER BY p.last_in_at DESC LIMIT 500"
+        ),
+        {"tid": tenant.id},
+    )
+    return [dict(r) for r in res.mappings().all()]
+
+
+# ============================================================
+# Dashboard: P/A/L/H/W matrix (Odoo-style)
+# ============================================================
+
+@router.get("/dashboard")
+async def attendance_dashboard(
+    ctx=Depends(tenant_session),
+    year: int = Query(...),
+    month: int = Query(..., ge=1, le=12),
+    department_id: int | None = None,
+    branch_id: int | None = None,
+):
+    """Employee × day grid with status code per cell.
+
+    Codes:
+      P – Present (>=1 punch on this day)
+      A – Absent (work day, no punch, no leave, not holiday)
+      L – Leave (approved leave_request covers this day)
+      H – Holiday (in tenant holidays table)
+      W – Weekend (Sun, plus Sat if work_week_days <= 5)
+      \u2014 – Before hire / after termination
+    """
+    session, tenant = ctx
+    period_start = date(year, month, 1)
+    days_in_month = calendar.monthrange(year, month)[1]
+    period_end = date(year, month, days_in_month)
+
+    cfg = await session.execute(
+        text("SELECT work_week_days FROM tenants WHERE id = :tid"),
+        {"tid": tenant.id},
+    )
+    work_week_days = int(cfg.scalar() or 6)
+
+    # Employees in scope
+    clauses = ["e.tenant_id = :tid", "e.is_active = TRUE"]
+    params: dict = {"tid": tenant.id}
+    if department_id:
+        clauses.append("e.department_id = :did")
+        params["did"] = department_id
+    if branch_id:
+        clauses.append("e.branch_id = :bid")
+        params["bid"] = branch_id
+
+    emp_res = await session.execute(
+        text(
+            "SELECT e.id, e.employee_code, e.full_name, e.device_pin, "
+            " e.hired_at, e.terminated_at, "
+            " d.name AS department_name "
+            "FROM employees e "
+            "LEFT JOIN departments d ON d.id = e.department_id "
+            "WHERE " + " AND ".join(clauses) +
+            " ORDER BY e.id LIMIT 1000"
+        ),
+        params,
+    )
+    employees = [dict(r) for r in emp_res.mappings().all()]
+    emp_ids = [e["id"] for e in employees]
+
+    # Holidays for the month
+    hol_res = await session.execute(
+        text(
+            "SELECT holiday_date FROM holidays "
+            "WHERE tenant_id = :tid AND holiday_date BETWEEN :s AND :e"
+        ),
+        {"tid": tenant.id, "s": period_start, "e": period_end},
+    )
+    holidays = {r["holiday_date"] for r in hol_res.mappings().all()}
+
+    # Leave requests covering this month (only approved)
+    leave_res = await session.execute(
+        text(
+            "SELECT employee_id, start_date, end_date "
+            "FROM leave_requests "
+            "WHERE tenant_id = :tid AND status = 'approved' "
+            "AND start_date <= :pe AND end_date >= :ps"
+        ),
+        {"tid": tenant.id, "pe": period_end, "ps": period_start},
+    )
+    leaves: dict[int, set] = {}
+    for r in leave_res.mappings().all():
+        s = max(r["start_date"], period_start)
+        e = min(r["end_date"], period_end)
+        cur = s
+        while cur <= e:
+            leaves.setdefault(r["employee_id"], set()).add(cur)
+            cur += timedelta(days=1)
+
+    # Punches per (employee, day) for the month
+    punches: dict[int, dict[date, int]] = {}
+    if emp_ids:
+        p_res = await session.execute(
+            text(
+                "SELECT employee_id, DATE(punched_at) AS d, COUNT(*)::INT AS n "
+                "FROM normalized_attendance_logs "
+                "WHERE tenant_id = :tid AND employee_id = ANY(:ids) "
+                "  AND punched_at >= :ps AND punched_at < :pe "
+                "GROUP BY employee_id, DATE(punched_at)"
+            ),
+            {
+                "tid": tenant.id, "ids": emp_ids,
+                "ps": datetime.combine(period_start, time.min, tzinfo=timezone.utc),
+                "pe": datetime.combine(period_end + timedelta(days=1), time.min, tzinfo=timezone.utc),
+            },
+        )
+        for r in p_res.mappings().all():
+            punches.setdefault(r["employee_id"], {})[r["d"]] = r["n"]
+
+    # Build the matrix
+    def status_for(eid: int, d: date) -> str:
+        # Before hire / after term
+        # (skipped: hired_at/terminated_at column comparisons need lookup — handled
+        # outside the inner loop)
+        if d in holidays:
+            return "H"
+        weekday = d.weekday()  # 0=Mon, 6=Sun
+        if weekday == 6:
+            return "W"
+        if weekday == 5 and work_week_days <= 5:
+            return "W"
+        if d in leaves.get(eid, set()):
+            return "L"
+        if punches.get(eid, {}).get(d, 0) > 0:
+            return "P"
+        return "A"
+
+    rows = []
+    for emp in employees:
+        cells = []
+        hire = emp.get("hired_at")
+        term = emp.get("terminated_at")
+        present = absent = leave = holiday = weekend = 0
+        for day in range(1, days_in_month + 1):
+            d = date(year, month, day)
+            if (hire and d < hire) or (term and d > term):
+                code = "-"
+            else:
+                code = status_for(emp["id"], d)
+            cells.append({"day": day, "status": code,
+                          "punches": punches.get(emp["id"], {}).get(d, 0)})
+            if code == "P":   present += 1
+            elif code == "A": absent += 1
+            elif code == "L": leave += 1
+            elif code == "H": holiday += 1
+            elif code == "W": weekend += 1
+        rows.append({
+            "employee_id": emp["id"],
+            "employee_code": emp["employee_code"],
+            "full_name": emp["full_name"],
+            "department": emp["department_name"],
+            "device_pin": emp["device_pin"],
+            "cells": cells,
+            "summary": {"P": present, "A": absent, "L": leave,
+                        "H": holiday, "W": weekend},
+        })
+
+    return {
+        "year": year,
+        "month": month,
+        "days_in_month": days_in_month,
+        "work_week_days": work_week_days,
+        "holidays": sorted(d.isoformat() for d in holidays),
+        "rows": rows,
+    }
 
 
 @router.get("/logs", response_model=list[AttendanceLogOut])

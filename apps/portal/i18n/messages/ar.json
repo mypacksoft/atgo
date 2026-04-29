@@ -1,0 +1,55 @@
+{
+  "brand": {
+    "tagline": "حضور سحابي لأجهزة ZKTeco"
+  },
+  "nav": {
+    "overview": "نظرة عامة",
+    "devices": "الأجهزة",
+    "employees": "الموظفون",
+    "branches": "الفروع",
+    "departments": "الأقسام",
+    "attendance": "سجل الحضور",
+    "presence": "في العمل حالياً",
+    "dashboard": "لوحة التحكم",
+    "timesheet": "كشف الوقت",
+    "sync": "مزامنة الأجهزة",
+    "requests": "الطلبات",
+    "domains": "النطاقات",
+    "billing": "الفواتير",
+    "apiKeys": "مفاتيح API",
+    "settings": "الإعدادات",
+    "signOut": "تسجيل الخروج",
+    "signIn": "تسجيل الدخول",
+    "signUp": "إنشاء مساحة عمل",
+    "pricing": "الأسعار"
+  },
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "add": "إضافة",
+    "loading": "جاري التحميل…",
+    "yes": "نعم",
+    "no": "لا",
+    "active": "نشط",
+    "online": "متصل",
+    "offline": "غير متصل",
+    "today": "اليوم",
+    "month": "الشهر",
+    "year": "السنة",
+    "noData": "لا توجد بيانات."
+  },
+  "auth": {
+    "signInTitle": "تسجيل الدخول",
+    "signUpTitle": "إنشاء مساحة عمل"
+  },
+  "pricing": {
+    "perMonth": "/شهر",
+    "free": "مجاناً",
+    "upgrade": "ترقية"
+  },
+  "lang": {
+    "switcherLabel": "اللغة"
+  }
+}

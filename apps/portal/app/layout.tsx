@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
+
+import { isRtl } from "../i18n/config";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,10 +18,18 @@ export const viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+  const dir = isRtl(locale) ? "rtl" : "ltr";
+
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang={locale} dir={dir}>
+      <body>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          {children}
+        </NextIntlClientProvider>
+      </body>
     </html>
   );
 }

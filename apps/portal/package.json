@@ -14,7 +14,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "swr": "^2.2.5",
-    "zod": "^3.23.8"
+    "zod": "^4.4.2"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

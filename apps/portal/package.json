@@ -9,10 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "^15.0.0",
-    "next-intl": "^4.11.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "next": "^15.5.18",
+    "next-intl": "^4.11.1",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
     "swr": "^2.2.5",
     "zod": "^3.23.8"
   },
